@@ -152,7 +152,11 @@ CORS_ORIGIN_WHITELIST = [
 django_heroku.settings(locals())
 
 
-DATABASES = {}
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+    }
+}
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 options = DATABASES['default'].get('OPTIONS', {})
 options.pop('sslmode', None)
