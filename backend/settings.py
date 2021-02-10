@@ -10,14 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import 
+from pathlib import Path
+import os
 import django_heroku
+import dotenv
+import dj_database_url
 
-django_heroku.settings(locals())
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -28,7 +34,7 @@ SECRET_KEY = '7pipdz5^)vbuf$1qxx1^nm$fs9cx!^+ou7%2as85urr-o-#8)8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,8 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'app',
     'whitenoise.runserver_nostatic',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +69,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -143,3 +149,10 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',
     'http://localhost:8080',
 ]
+django_heroku.settings(locals())
+
+
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+options = DATABASES['default'].get('OPTIONS', {})
+options.pop('sslmode', None)

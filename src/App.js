@@ -1,7 +1,12 @@
 import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
 
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
 function App() {
+  axios.get("/trading/").then(res => console.log(res));
   return (
     <div className="App">
       <header className="App-header">
