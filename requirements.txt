@@ -1,18 +1,13 @@
 aiohttp==3.6.3
 appnope==0.1.0
-argon2-cffi @ file:///opt/concourse/worker/volumes/live/b46b812d-eebc-4040-75c0-7fc24d9bfd54/volume/argon2-cffi_1596828479252/work
 asgiref==3.3.1
-astroid @ file:///opt/concourse/worker/volumes/live/76ddd801-8c2e-42ae-78fe-7e7640c9eb32/volume/astroid_1592495930711/work
 async-generator==1.10
 async-timeout==3.0.1
-attrs @ file:///tmp/build/80754af9/attrs_1600298409949/work
 Automat==20.2.0
 backcall==0.2.0
 beautifulsoup4==4.9.3
-bleach @ file:///tmp/build/80754af9/bleach_1600439572647/work
 bs4==0.0.1
 certifi==2020.12.5
-cffi @ file:///opt/concourse/worker/volumes/live/e2eb91c2-780d-4f74-545d-c2827857ffe3/volume/cffi_1600699193708/work
 chardet==3.0.4
 click==7.1.2
 colorama==0.4.4
