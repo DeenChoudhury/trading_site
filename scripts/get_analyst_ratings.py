@@ -66,11 +66,11 @@ def get_table_data(country, date):
 	COUNTRY = {"USA": "1", "Canada":"2"}
 
 	chrome_options = webdriver.ChromeOptions()
-	chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+	chrome_options.binary_location = GOOGLE_CHROME_PATH
 	chrome_options.add_argument("--headless")
 	chrome_options.add_argument("--disable-dev-shm-usage")
 	chrome_options.add_argument("--no-sandbox")
-	driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
+	driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, options=chrome_options)
 
 	# Selenium driver to automate webscraping
 	# options = Options()
