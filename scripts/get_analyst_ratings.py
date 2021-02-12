@@ -18,6 +18,9 @@ cwd = os.getcwd()
 FILE_PATH = os.path.join(cwd,"data","Analyst_Ratings")
 WATCHLIST_PATH = os.getcwd() + "/data/watchlist.json"
 
+GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
+CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+
 parser = ArgumentParser()
 parser.add_argument('-d', '--dates', help='add dates', type=str, action='store')
 parser.add_argument('-n', '--num', help='add dates', type=int,default=1, action='store')
@@ -61,11 +64,19 @@ def email_excel(file_paths):
 def get_table_data(country, date):
 	print("Opening driver for " + date)
 	COUNTRY = {"USA": "1", "Canada":"2"}
+
+	chrome_options = webdriver.ChromeOptions()
+	chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+	chrome_options.add_argument("--headless")
+	chrome_options.add_argument("--disable-dev-shm-usage")
+	chrome_options.add_argument("--no-sandbox")
+	driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), ptions=chrome_options)
+
 	# Selenium driver to automate webscraping
-	options = Options()
-	options.add_argument("--headless")
-	options.add_experimental_option('excludeSwitches', ['enable-logging'])
-	driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+	# options = Options()
+	# options.add_argument("--headless")
+	# options.add_experimental_option('excludeSwitches', ['enable-logging'])
+	# driver = webdriver.Chrome(options=options)
 	#driver = webdriver.Chrome(executable_path=chrome)
 	driver.get("https://www.marketbeat.com/ratings/")
 	wait = WebDriverWait(driver, 20)
