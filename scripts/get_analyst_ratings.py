@@ -73,7 +73,6 @@ def get_table_data(country, date):
 	options.add_argument("--disable-gpu")
 	options.add_argument("--no-sandbox")
 	options.add_argument('headless')
-	options.add_argument('window-size=1200x600')
 	driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
 	# Selenium driver to automate webscraping
 	# options = Options()
