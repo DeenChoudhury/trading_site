@@ -11,6 +11,7 @@ import json
 import csv, os,re,requests,time,datetime
 import pandas as pd
 from webdriver_manager.chrome import ChromeDriverManager
+from pytz import timezone
 
 
 COUNTRY = "USA"
@@ -95,7 +96,6 @@ def get_table_data(country, date):
 	inputElement = driver.find_element_by_id('cphPrimaryContent_txtStartDate')
 	inputElement.clear()
 	inputElement.send_keys(date)
-	print(date)
 	inputElement.send_keys(Keys.ENTER)
 
 	time.sleep(2)
@@ -139,7 +139,6 @@ def get_table_rows(soup):
 	# Parse through html to filter data
 	table = soup.find(class_ = "scroll-table")
 	rows = table.find_all("tr")
-	print(rows)
 	for row in rows:
 		td = row.find_all("td")
 		if len(td) > 5:
@@ -175,8 +174,8 @@ def main():
 	num_days = args.num
 	rows = []
 	for i in range(0,num_days):
-		date = (datetime.date.today()-timedelta(days=i)).strftime("%m/%d/%Y")
-		date_file = (datetime.date.today()-timedelta(days=i)).strftime("%m-%d-%Y")
+		eastern = timezone('US/Eastern')
+		date = (datetime.datetime.now(eastern)-timedelta(days=i)).strftime("%m/%d/%Y")
 		soup = get_table_data(COUNTRY,date)
 		data = get_table_rows(soup)
 
@@ -186,6 +185,7 @@ def main():
 		df = table_rows_to_df(rows)
 		sorted_df = df.sort_values(by=['diff'], ascending=False)
 		post_data = json.dumps(sorted_df.to_dict(orient='records'))
+		print(post_data)
 
 
 	print("Total Elapsed Time: %s" % (datetime.datetime.now() - start_time))
