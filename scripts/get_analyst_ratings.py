@@ -101,7 +101,7 @@ def get_table_data(country, date):
 
 	# Setup BeautifulSoup object
 	soup = BeautifulSoup(driver.page_source, 'html.parser')
-
+	
 	driver.quit()
 
 	return soup
@@ -138,6 +138,7 @@ def get_table_rows(soup):
 	# Parse through html to filter data
 	table = soup.find(class_ = "scroll-table")
 	rows = table.find_all("tr")
+	print(rows)
 	for row in rows:
 		td = row.find_all("td")
 		if len(td) > 5:

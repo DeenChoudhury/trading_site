@@ -9,6 +9,8 @@ db.sqlite3
 media
 lib/
 bin/
+node_modules/
+package-lock.json
 
 # don't track virtualenv, ever!
 venv/
