@@ -95,6 +95,7 @@ def get_table_data(country, date):
 	inputElement = driver.find_element_by_id('cphPrimaryContent_txtStartDate')
 	inputElement.clear()
 	inputElement.send_keys(date)
+	print(date)
 	inputElement.send_keys(Keys.ENTER)
 
 	time.sleep(2)
@@ -185,7 +186,6 @@ def main():
 		df = table_rows_to_df(rows)
 		sorted_df = df.sort_values(by=['diff'], ascending=False)
 		post_data = json.dumps(sorted_df.to_dict(orient='records'))
-		print(post_data)
 
 
 	print("Total Elapsed Time: %s" % (datetime.datetime.now() - start_time))
