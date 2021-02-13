@@ -65,21 +65,22 @@ def get_table_data(country, date):
 	print("Opening driver for " + date)
 	COUNTRY = {"USA": "1", "Canada":"2"}
 
-	CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
-
-	chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', "chromedriver")
-	options = webdriver.ChromeOptions()
-	options.binary_location = chrome_bin
-	options.add_argument("--disable-gpu")
-	options.add_argument("--no-sandbox")
-	options.add_argument('headless')
-	driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
-	# Selenium driver to automate webscraping
-	# options = Options()
-	# options.add_argument("--headless")
-	# options.add_experimental_option('excludeSwitches', ['enable-logging'])
-	# driver = webdriver.Chrome(options=options)
-	#driver = webdriver.Chrome(executable_path=chrome)
+	#Heroku Chrome Driver
+	# chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', "chromedriver")
+	# options = webdriver.ChromeOptions()
+	# options.binary_location = chrome_bin
+	# options.add_argument("--disable-gpu")
+	# options.add_argument("--no-sandbox")
+	# options.add_argument('headless')
+	# driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
+	
+	# Local driver to automate webscraping
+	options = Options()	
+	options.add_argument("--headless")
+	options.add_experimental_option('excludeSwitches', ['enable-logging'])
+	driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+	
+		
 	driver.get("https://www.marketbeat.com/ratings/")
 	wait = WebDriverWait(driver, 20)
 
@@ -176,10 +177,14 @@ def main():
 		date_file = (datetime.date.today()-timedelta(days=i)).strftime("%m-%d-%Y")
 		soup = get_table_data(COUNTRY,date)
 		data = get_table_rows(soup)
+
 		
 		# rows = rows + data
 		rows = data
 		df = table_rows_to_df(rows)
+		sorted_df = df.sort_values(by=['diff'], ascending=False)
+		post_data = json.dumps(sorted_df.to_dict(orient='records'))
+		print(post_data)
 
 
 	print("Total Elapsed Time: %s" % (datetime.datetime.now() - start_time))
