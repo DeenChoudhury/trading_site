@@ -27,5 +27,6 @@ router.register(r'trading', views.TradingView, 'api')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    re_path('.*', TemplateView.as_view(template_name="index.html"))
+    path('api/ratings/', views.analyst_ratings),
+    re_path('.*', TemplateView.as_view(template_name="index.html")),
 ]

@@ -110,21 +110,22 @@ def get_table_data(country, date):
 #params: soup object
 #return: DataFrame object
 def table_rows_to_df(rows):
-	data = {"date":[],"ticker":[],"company":[],"action":[],"brokerage":[],"current":[],"target_orig":[],
-			"target_new":[],"rating":[],"impact":[],"diff":[]}
+	data = {"date":[],"ticker":[],"company":[],"action":[],"brokerage":[],"current":[],"target_original":[],
+			"target_new":[],"rating":[],"impact":[],"percent_upside":[]}
 	for r in rows:
 		#Add to excel data
+		print(r["date"])
 		data["date"].append(r["date"])
 		data["ticker"].append(r["ticker"])
 		data["company"].append(r["company"])
 		data["action"].append(r["action"])
 		data["brokerage"].append(r["brokerage"])
 		data["current"].append(r["current"])
-		data["target_orig"].append(r["target_orig"])
+		data["target_original"].append(r["target_original"])
 		data["target_new"].append(r["target_new"])
 		data["rating"].append(r["rating"])
 		data["impact"].append(r["impact"])
-		data["diff"].append(r["diff"])
+		data["percent_upside"].append(r["percent_upside"])
 	df =  pd.DataFrame(data=data)
 	return df
 
@@ -163,8 +164,8 @@ def get_table_rows(soup):
 			rating = td[5].get_text()
 			impact = td[6].get_text()
 			diff = get_percentage_diff(current_price,target_new)
-			ratings.append({"date":date,"ticker":ticker,"company":company,"action":action,"brokerage":brokerage,"current":current_price,"target_orig":target_orig,
-				"target_new":target_new,"rating":rating,"impact":impact,"diff":diff})
+			ratings.append({"date":date,"ticker":ticker,"company":company,"action":action,"brokerage":brokerage,"current":current_price,"target_original":target_orig,
+				"target_new":target_new,"rating":rating,"impact":impact,"percent_upside":diff})
 	return ratings
 
 
@@ -183,9 +184,11 @@ def main():
 		# rows = rows + data
 		rows = data
 		df = table_rows_to_df(rows)
-		sorted_df = df.sort_values(by=['diff'], ascending=False)
+		sorted_df = df.sort_values(by=['percent_upside'], ascending=False)
 		post_data = json.dumps(sorted_df.to_dict(orient='records'))
 		print(post_data)
+		r = requests.post('http://127.0.0.1:8000/api/ratings/', json=post_data)
+		print(r.status_code)
 
 
 	print("Total Elapsed Time: %s" % (datetime.datetime.now() - start_time))
