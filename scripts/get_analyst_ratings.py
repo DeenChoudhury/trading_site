@@ -37,7 +37,7 @@ def get_yahoo_ticker_price(ticker):
 def get_price_from_cell(s):
 	replace = ["$",",","C","€","GBX"]
 	for ch in replace:
-		s = s.split("+")[0].replace(ch,"")
+		s = re.split('\\+|-',s)[0].replace(ch,"")
 		
 	try:
 		return float(s)
@@ -67,19 +67,20 @@ def get_table_data(country, date):
 	COUNTRY = {"USA": "1", "Canada":"2"}
 
 	#Heroku Chrome Driver
-	# chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', "chromedriver")
-	# options = webdriver.ChromeOptions()
-	# options.binary_location = chrome_bin
-	# options.add_argument("--disable-gpu")
-	# options.add_argument("--no-sandbox")
-	# options.add_argument('headless')
-	# driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
+	chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', "chromedriver")
+	options = webdriver.ChromeOptions()
+	options.binary_location = chrome_bin
+	options.add_argument("--disable-gpu")
+	options.add_argument("--no-sandbox")
+	options.add_argument('headless')
+	chrome_options.add_argument('--disable-dev-shm-usage') 
+	driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
 	
 	# Local driver to automate webscraping
-	options = Options()	
-	options.add_argument("--headless")
-	options.add_experimental_option('excludeSwitches', ['enable-logging'])
-	driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+	# options = Options()	
+	# options.add_argument("--headless")
+	# options.add_experimental_option('excludeSwitches', ['enable-logging'])
+	# driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 	
 		
 	driver.get("https://www.marketbeat.com/ratings/")
@@ -187,7 +188,8 @@ def main():
 		sorted_df = df.sort_values(by=['percent_upside'], ascending=False)
 		post_data = json.dumps(sorted_df.to_dict(orient='records'))
 		print(post_data)
-		r = requests.post('http://127.0.0.1:8000/api/ratings/', json=post_data)
+		# r = requests.post('http://127.0.0.1:8000/api/ratings/', json=post_data)
+		r = requests.post('http://www.deentheredonethat.com/api/ratings/', json=post_data)
 		print(r.status_code)
 
 
